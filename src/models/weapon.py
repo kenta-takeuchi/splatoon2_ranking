@@ -15,3 +15,9 @@ class Weapon(Base):
     scores = relationship("Score", back_populates="weapon")
     sub_weapon = relationship("SubWeapon", back_populates="weapons")
     special = relationship("Special", back_populates="weapons")
+
+    @staticmethod
+    def create(session, weapon_id, name, sub_weapon_id, special_id):
+        weapon = Weapon(id=weapon_id, name=name, sub_weapon_id=sub_weapon_id, special_id=special_id)
+        session.add(weapon)
+        return weapon

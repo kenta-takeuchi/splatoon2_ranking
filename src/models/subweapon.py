@@ -11,3 +11,9 @@ class SubWeapon(Base):
     name = Column(String(20))
 
     weapons = relationship("Weapon", back_populates="sub_weapon")
+
+    @staticmethod
+    def create(session, sub_weapon_id, name):
+        sub_weapon = SubWeapon(id=sub_weapon_id, name=name)
+        session.add(sub_weapon)
+        return sub_weapon

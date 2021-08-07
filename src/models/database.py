@@ -15,3 +15,6 @@ class BaseSession(BaseEngine):
         super().__init__()
         session = sessionmaker(bind=self.engine)
         self.session = session()
+
+    def get_session(self):
+        return self.session

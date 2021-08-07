@@ -8,7 +8,3 @@ class Migration(object):
 
     def exec(self):
         Base.metadata.create_all(self.engine)
-
-
-if __name__ == '__main__':
-    Migration().exec()
