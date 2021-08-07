@@ -8,7 +8,7 @@ class Score(Base):
     __tablename__ = 'score'
 
     id = Column(Integer, primary_key=True)
-    user_unique_id = Column(Integer, ForeignKey('user.unique_id'))
+    user_unique_id = Column(String, ForeignKey('user.unique_id'))
     rule = Column(String(20))
     scored_at = Column(Date)
     power = Column(Float)
@@ -24,4 +24,4 @@ class Score(Base):
     def create(session, user, rule, scored_at, power, rank, weapon_id):
         score = Score(user=user, rule=rule, scored_at=scored_at, power=power, rank=rank, weapon_id=weapon_id)
         session.add(score)
-        return user
+        return score
