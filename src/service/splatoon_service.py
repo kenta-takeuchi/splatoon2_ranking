@@ -31,7 +31,7 @@ class SplatoonService:
         self.month = month
         self.rule = rule
 
-        url = urllib.parse.urljoin(self.base_url, f'x_power_ranking/{self._sending_month()}/{rule}')
+        url = urllib.parse.urljoin(self.base_url, f'x_power_ranking/{self._filtering_month()}/{rule}')
         results = []
         for i in range(1, 6):
             params = {'page': i}
@@ -41,10 +41,13 @@ class SplatoonService:
         self.ranking_data = results
 
     def save(self):
-        '''
-            N+1以上のことしているのでやばい
-        :return:
-        '''
+        # TODO
+        #  N+1以上のことしているのでやばい
+        #  sqliteにfind_or_createないか調べる
+        #  find_or_createの処理を各モデルクラスに移行する
+        #  武器のマスタデータのAPI探す
+        #   マスタデータを登録するメソッドを作る
+        #   saveメソッドから武器のfind_or_create処理を削除して、userとscoreのfind_or_createのみにする
         session = BaseSession().get_session()
         for data in self.ranking_data:
             user = session.query(User).get(data['unique_id'])
@@ -69,11 +72,11 @@ class SplatoonService:
             score = session.execute(
                 select(Score).where(Score.user_unique_id == user.unique_id).where(Score.scored_at == self.month))
             if score is not None:
-                Score.create(session, user, self.rule, dt.strptime(self.month, '%Y-%m-%d'), data['x_power'], data['rank'],
-                             weapon.id)
+                Score.create(session, user, self.rule, dt.strptime(self.month, '%Y-%m-%d'), data['x_power'],
+                             data['rank'],weapon.id)
             session.commit()
 
-    def _sending_month(self):
+    def _filtering_month(self):
         this_month = f'{self.month[2:4]}{self.month[5:7]}'
         if {self.month[6:8]} == '12':
             next_month = f'{int(self.month[2:4]) + 1}01'
